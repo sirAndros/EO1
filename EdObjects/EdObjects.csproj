@@ -187,9 +187,6 @@
     <Compile Include="Models\PropertyValues.cs">
       <DependentUpon>ModelFromDB.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Successor.cs">
-      <DependentUpon>ModelFromDB.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\ValueOfProperty.cs" />
     <Compile Include="Models\Version.cs">
       <DependentUpon>ModelFromDB.tt</DependentUpon>

@@ -30,7 +30,6 @@ namespace EdObjects.Models
         public virtual DbSet<ObjectInstance> ObjectInstance { get; set; }
         public virtual DbSet<ObjectType> ObjectType { get; set; }
         public virtual DbSet<PropertyType> PropertyType { get; set; }
-        public virtual DbSet<Successor> Successor { get; set; }
         public virtual DbSet<Container> Container { get; set; }
         public virtual DbSet<Properties> Properties { get; set; }
         public virtual DbSet<PropertyValues> PropertyValues { get; set; }

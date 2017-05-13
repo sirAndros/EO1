@@ -4,11 +4,10 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="c9447c475d204c829c397cea1d9461d6" Name="Diagram1" ZoomLevel="55">
+      <Diagram DiagramId="c9447c475d204c829c397cea1d9461d6" Name="Diagram1" ZoomLevel="124">
         <EntityTypeShape EntityType="DBEOModel.ObjectInstance" Width="1.5" PointX="3" PointY="3.75" IsExpanded="true" />
         <EntityTypeShape EntityType="DBEOModel.ObjectType" Width="1.5" PointX="0.75" PointY="4" IsExpanded="true" />
         <EntityTypeShape EntityType="DBEOModel.PropertyType" Width="1.5" PointX="3.75" PointY="1.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="DBEOModel.Successor" Width="1.5" PointX="8.5" PointY="8.125" IsExpanded="true" />
         <AssociationConnector Association="DBEOModel.FK_Object_ObjectType" ManuallyRouted="false" />
         <AssociationConnector Association="DBEOModel.FK_ObjectInstance_ObjectInstance1" ManuallyRouted="false" />
         <EntityTypeShape EntityType="DBEOModel.Container" Width="1.5" PointX="4.25" PointY="7.75" />
@@ -18,11 +17,13 @@
         <AssociationConnector Association="DBEOModel.FK_Container_ObjectInstance" />
         <AssociationConnector Association="DBEOModel.FK_Container_ObjectInstance1" />
         <AssociationConnector Association="DBEOModel.FK_PropertyValues_ObjectInstance" />
-        <AssociationConnector Association="DBEOModel.FK_Version_ObjectInstance" />
         <AssociationConnector Association="DBEOModel.FK_ObjectProperty_ObjectType1" />
         <AssociationConnector Association="DBEOModel.FK_ObjectProperty_PropertyType1" />
         <AssociationConnector Association="DBEOModel.FK_PropertyValues_Properties" />
         <AssociationConnector Association="DBEOModel.FK_Version_PropertyValues" />
+        <AssociationConnector Association="DBEOModel.FK_Version_ObjectInstance1" />
+        <AssociationConnector Association="DBEOModel.ContainerRestrictions" />
+        <AssociationConnector Association="DBEOModel.FK_ObjectType_ObjectType" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -13,6 +13,14 @@
           <Property Name="IDInstanceContainer" Type="int" Nullable="false" />
           <Property Name="IDInstanceObject" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="ContainerRestrictions">
+          <Key>
+            <PropertyRef Name="IDParentType" />
+            <PropertyRef Name="IDChildType" />
+          </Key>
+          <Property Name="IDParentType" Type="int" Nullable="false" />
+          <Property Name="IDChildType" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="ObjectInstance">
           <Key>
             <PropertyRef Name="Id" />
@@ -27,6 +35,7 @@
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="BaseType" Type="int" />
         </EntityType>
         <EntityType Name="Properties">
           <Key>
@@ -52,14 +61,6 @@
           <Property Name="IDInstanceObject" Type="int" Nullable="false" />
           <Property Name="IDProperty" Type="int" Nullable="false" />
           <Property Name="Value" Type="nvarchar" MaxLength="300" />
-        </EntityType>
-        <EntityType Name="Successor">
-          <Key>
-            <PropertyRef Name="IDObjectTypeParent" />
-            <PropertyRef Name="IDObjectTypeChild" />
-          </Key>
-          <Property Name="IDObjectTypeParent" Type="int" Nullable="false" />
-          <Property Name="IDObjectTypeChild" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Version">
           <Key>
@@ -92,6 +93,30 @@
             </Principal>
             <Dependent Role="Container">
               <PropertyRef Name="IDInstanceObject" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ContainerRestrictions_ObjectType">
+          <End Role="ObjectType" Type="Self.ObjectType" Multiplicity="1" />
+          <End Role="ContainerRestrictions" Type="Self.ContainerRestrictions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ObjectType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ContainerRestrictions">
+              <PropertyRef Name="IDParentType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ContainerRestrictions_ObjectType1">
+          <End Role="ObjectType" Type="Self.ObjectType" Multiplicity="1" />
+          <End Role="ContainerRestrictions" Type="Self.ContainerRestrictions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ObjectType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ContainerRestrictions">
+              <PropertyRef Name="IDChildType" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -143,6 +168,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_ObjectType_ObjectType">
+          <End Role="ObjectType" Type="Self.ObjectType" Multiplicity="0..1" />
+          <End Role="ObjectType1" Type="Self.ObjectType" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ObjectType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ObjectType1">
+              <PropertyRef Name="BaseType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_PropertyValues_ObjectInstance">
           <End Role="ObjectInstance" Type="Self.ObjectInstance" Multiplicity="1" />
           <End Role="PropertyValues" Type="Self.PropertyValues" Multiplicity="*" />
@@ -169,13 +206,13 @@
         </Association>
         <Association Name="FK_Version_ObjectInstance">
           <End Role="ObjectInstance" Type="Self.ObjectInstance" Multiplicity="1" />
-          <End Role="Version" Type="Self.Version" Multiplicity="0..1" />
+          <End Role="Version" Type="Self.Version" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="ObjectInstance">
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Version">
-              <PropertyRef Name="ID" />
+              <PropertyRef Name="IDParentInstance" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -196,12 +233,12 @@
         </Function>
         <EntityContainer Name="DBEOModelStoreContainer">
           <EntitySet Name="Container" EntityType="Self.Container" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ContainerRestrictions" EntityType="Self.ContainerRestrictions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ObjectInstance" EntityType="Self.ObjectInstance" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ObjectType" EntityType="Self.ObjectType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Properties" EntityType="Self.Properties" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PropertyType" EntityType="Self.PropertyType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PropertyValues" EntityType="Self.PropertyValues" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Successor" EntityType="Self.Successor" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Version" EntityType="Self.Version" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_Container_ObjectInstance" Association="Self.FK_Container_ObjectInstance">
             <End Role="ObjectInstance" EntitySet="ObjectInstance" />
@@ -210,6 +247,14 @@
           <AssociationSet Name="FK_Container_ObjectInstance1" Association="Self.FK_Container_ObjectInstance1">
             <End Role="ObjectInstance" EntitySet="ObjectInstance" />
             <End Role="Container" EntitySet="Container" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ContainerRestrictions_ObjectType" Association="Self.FK_ContainerRestrictions_ObjectType">
+            <End Role="ObjectType" EntitySet="ObjectType" />
+            <End Role="ContainerRestrictions" EntitySet="ContainerRestrictions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ContainerRestrictions_ObjectType1" Association="Self.FK_ContainerRestrictions_ObjectType1">
+            <End Role="ObjectType" EntitySet="ObjectType" />
+            <End Role="ContainerRestrictions" EntitySet="ContainerRestrictions" />
           </AssociationSet>
           <AssociationSet Name="FK_Object_ObjectType" Association="Self.FK_Object_ObjectType">
             <End Role="ObjectType" EntitySet="ObjectType" />
@@ -226,6 +271,10 @@
           <AssociationSet Name="FK_ObjectProperty_PropertyType" Association="Self.FK_ObjectProperty_PropertyType">
             <End Role="PropertyType" EntitySet="PropertyType" />
             <End Role="Properties" EntitySet="Properties" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ObjectType_ObjectType" Association="Self.FK_ObjectType_ObjectType">
+            <End Role="ObjectType" EntitySet="ObjectType" />
+            <End Role="ObjectType1" EntitySet="ObjectType" />
           </AssociationSet>
           <AssociationSet Name="FK_PropertyValues_ObjectInstance" Association="Self.FK_PropertyValues_ObjectInstance">
             <End Role="ObjectInstance" EntitySet="ObjectInstance" />
@@ -261,7 +310,7 @@
           <NavigationProperty Name="Container" Relationship="DBEOModel.FK_Container_ObjectInstance" FromRole="ObjectInstance" ToRole="Container" />
           <NavigationProperty Name="Container1" Relationship="DBEOModel.FK_Container_ObjectInstance1" FromRole="ObjectInstance" ToRole="Container" />
           <NavigationProperty Name="PropertyValues" Relationship="DBEOModel.FK_PropertyValues_ObjectInstance" FromRole="ObjectInstance" ToRole="PropertyValues" />
-          <NavigationProperty Name="Version" Relationship="DBEOModel.FK_Version_ObjectInstance" FromRole="ObjectInstance" ToRole="Version" />
+          <NavigationProperty Name="Version1" Relationship="DBEOModel.FK_Version_ObjectInstance1" FromRole="ObjectInstance" ToRole="Version" />
         </EntityType>
         <EntityType Name="ObjectType">
           <Key>
@@ -271,6 +320,11 @@
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="ObjectInstance" Relationship="Self.FK_Object_ObjectType" FromRole="ObjectType" ToRole="ObjectInstance" />
           <NavigationProperty Name="Properties" Relationship="DBEOModel.FK_ObjectProperty_ObjectType1" FromRole="ObjectType" ToRole="Properties" />
+          <NavigationProperty Name="ObjectType1" Relationship="DBEOModel.ContainerRestrictions" FromRole="ObjectType" ToRole="ObjectType1" />
+          <NavigationProperty Name="ObjectType2" Relationship="DBEOModel.ContainerRestrictions" FromRole="ObjectType1" ToRole="ObjectType" />
+          <Property Name="BaseType" Type="Int32" />
+          <NavigationProperty Name="ObjectType11" Relationship="DBEOModel.FK_ObjectType_ObjectType" FromRole="ObjectType" ToRole="ObjectType1" />
+          <NavigationProperty Name="ObjectType21" Relationship="DBEOModel.FK_ObjectType_ObjectType" FromRole="ObjectType1" ToRole="ObjectType" />
         </EntityType>
         <EntityType Name="PropertyType">
           <Key>
@@ -279,14 +333,6 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="PropertyType1" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="Properties" Relationship="DBEOModel.FK_ObjectProperty_PropertyType1" FromRole="PropertyType" ToRole="Properties" />
-        </EntityType>
-        <EntityType Name="Successor">
-          <Key>
-            <PropertyRef Name="IDObjectTypeParent" />
-            <PropertyRef Name="IDObjectTypeChild" />
-          </Key>
-          <Property Name="IDObjectTypeParent" Type="Int32" Nullable="false" />
-          <Property Name="IDObjectTypeChild" Type="Int32" Nullable="false" />
         </EntityType>
         <Association Name="FK_Object_ObjectType">
           <End Role="ObjectType" Type="Self.ObjectType" Multiplicity="1" />
@@ -316,7 +362,6 @@
           <EntitySet Name="ObjectInstance" EntityType="Self.ObjectInstance" />
           <EntitySet Name="ObjectType" EntityType="Self.ObjectType" />
           <EntitySet Name="PropertyType" EntityType="Self.PropertyType" />
-          <EntitySet Name="Successor" EntityType="Self.Successor" />
           <AssociationSet Name="FK_Object_ObjectType" Association="Self.FK_Object_ObjectType">
             <End Role="ObjectType" EntitySet="ObjectType" />
             <End Role="ObjectInstance" EntitySet="ObjectInstance" />
@@ -341,10 +386,6 @@
             <End Role="ObjectInstance" EntitySet="ObjectInstance" />
             <End Role="PropertyValues" EntitySet="PropertyValues" />
           </AssociationSet>
-          <AssociationSet Name="FK_Version_ObjectInstance" Association="DBEOModel.FK_Version_ObjectInstance">
-            <End Role="ObjectInstance" EntitySet="ObjectInstance" />
-            <End Role="Version" EntitySet="Version" />
-          </AssociationSet>
           <AssociationSet Name="FK_ObjectProperty_ObjectType1" Association="DBEOModel.FK_ObjectProperty_ObjectType1">
             <End Role="ObjectType" EntitySet="ObjectType" />
             <End Role="Properties" EntitySet="Properties" />
@@ -362,8 +403,20 @@
             <End Role="Version" EntitySet="Version" />
           </AssociationSet>
           <FunctionImport Name="GetInstancesValues">
-            <Parameter Name="typeId" Mode="In" Type="Int32" />
+          <Parameter Name="typeId" Mode="In" Type="Int32" />
           </FunctionImport>
+          <AssociationSet Name="FK_Version_ObjectInstance1" Association="DBEOModel.FK_Version_ObjectInstance1">
+            <End Role="ObjectInstance" EntitySet="ObjectInstance" />
+            <End Role="Version" EntitySet="Version" />
+          </AssociationSet>
+          <AssociationSet Name="ContainerRestrictions" Association="DBEOModel.ContainerRestrictions">
+            <End Role="ObjectType" EntitySet="ObjectType" />
+            <End Role="ObjectType1" EntitySet="ObjectType" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ObjectType_ObjectType" Association="DBEOModel.FK_ObjectType_ObjectType">
+            <End Role="ObjectType" EntitySet="ObjectType" />
+            <End Role="ObjectType1" EntitySet="ObjectType" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Container">
           <Key>
@@ -408,8 +461,8 @@
           <Property Name="IDPropertyValue" Type="Int32" Nullable="false" />
           <Property Name="OldValue" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
           <Property Name="NewValue" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="ObjectInstance" Relationship="DBEOModel.FK_Version_ObjectInstance" FromRole="Version" ToRole="ObjectInstance" />
           <NavigationProperty Name="PropertyValues" Relationship="DBEOModel.FK_Version_PropertyValues" FromRole="Version" ToRole="PropertyValues" />
+          <NavigationProperty Name="ObjectInstance1" Relationship="DBEOModel.FK_Version_ObjectInstance1" FromRole="Version" ToRole="ObjectInstance" />
         </EntityType>
         <Association Name="FK_Container_ObjectInstance">
           <End Type="DBEOModel.ObjectInstance" Role="ObjectInstance" Multiplicity="1" />
@@ -444,18 +497,6 @@
             </Principal>
             <Dependent Role="PropertyValues">
               <PropertyRef Name="IDInstanceObject" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Version_ObjectInstance">
-          <End Type="DBEOModel.ObjectInstance" Role="ObjectInstance" Multiplicity="1" />
-          <End Type="DBEOModel.Version" Role="Version" Multiplicity="0..1" />
-          <ReferentialConstraint>
-            <Principal Role="ObjectInstance">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Version">
-              <PropertyRef Name="ID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -507,6 +548,34 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Version_ObjectInstance1">
+          <End Type="DBEOModel.ObjectInstance" Role="ObjectInstance" Multiplicity="1" />
+          <End Type="DBEOModel.Version" Role="Version" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ObjectInstance">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Version">
+              <PropertyRef Name="IDParentInstance" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ContainerRestrictions">
+          <End Type="DBEOModel.ObjectType" Role="ObjectType" Multiplicity="*" />
+          <End Type="DBEOModel.ObjectType" Role="ObjectType1" Multiplicity="*" />
+        </Association>
+        <Association Name="FK_ObjectType_ObjectType">
+          <End Type="DBEOModel.ObjectType" Role="ObjectType" Multiplicity="0..1" />
+          <End Type="DBEOModel.ObjectType" Role="ObjectType1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ObjectType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ObjectType1">
+              <PropertyRef Name="BaseType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -525,6 +594,7 @@
           <EntitySetMapping Name="ObjectType">
             <EntityTypeMapping TypeName="DBEOModel.ObjectType">
               <MappingFragment StoreEntitySet="ObjectType">
+                <ScalarProperty Name="BaseType" ColumnName="BaseType" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
               </MappingFragment>
@@ -535,14 +605,6 @@
               <MappingFragment StoreEntitySet="PropertyType">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="PropertyType1" ColumnName="PropertyType" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Successor">
-            <EntityTypeMapping TypeName="DBEOModel.Successor">
-              <MappingFragment StoreEntitySet="Successor">
-                <ScalarProperty Name="IDObjectTypeParent" ColumnName="IDObjectTypeParent" />
-                <ScalarProperty Name="IDObjectTypeChild" ColumnName="IDObjectTypeChild" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -587,6 +649,14 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="GetInstancesValues" FunctionName="DBEOModel.Store.GetInstancesValues" />
+          <AssociationSetMapping Name="ContainerRestrictions" TypeName="DBEOModel.ContainerRestrictions" StoreEntitySet="ContainerRestrictions">
+            <EndProperty Name="ObjectType1">
+              <ScalarProperty Name="Id" ColumnName="IDChildType" />
+            </EndProperty>
+            <EndProperty Name="ObjectType">
+              <ScalarProperty Name="Id" ColumnName="IDParentType" />
+            </EndProperty>
+          </AssociationSetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

@@ -21,6 +21,7 @@ namespace EdObjects.Models
             this.Container = new HashSet<Container>();
             this.Container1 = new HashSet<Container>();
             this.PropertyValues = new HashSet<PropertyValues>();
+            this.Version1 = new HashSet<Version>();
         }
     
         public int Id { get; set; }
@@ -37,6 +38,7 @@ namespace EdObjects.Models
         public virtual ICollection<Container> Container1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PropertyValues> PropertyValues { get; set; }
-        public virtual Version Version { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Version> Version1 { get; set; }
     }
 }

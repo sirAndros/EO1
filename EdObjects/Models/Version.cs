@@ -12,9 +12,15 @@ namespace EdObjects.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Successor
+    public partial class Version
     {
-        public int IDObjectTypeParent { get; set; }
-        public int IDObjectTypeChild { get; set; }
+        public int ID { get; set; }
+        public int IDParentInstance { get; set; }
+        public int IDPropertyValue { get; set; }
+        public string OldValue { get; set; }
+        public string NewValue { get; set; }
+    
+        public virtual PropertyValues PropertyValues { get; set; }
+        public virtual ObjectInstance ObjectInstance1 { get; set; }
     }
 }
