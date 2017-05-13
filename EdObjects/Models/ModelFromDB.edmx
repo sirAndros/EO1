@@ -1,0 +1,613 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="DBEOModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Container">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IDInstanceContainer" Type="int" Nullable="false" />
+          <Property Name="IDInstanceObject" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ObjectInstance">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdTypeObject" Type="int" Nullable="false" />
+          <Property Name="BaseId" Type="int" />
+        </EntityType>
+        <EntityType Name="ObjectType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Properties">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdTypeObject" Type="int" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="IdPropertyType" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PropertyType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PropertyType" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PropertyValues">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IDInstanceObject" Type="int" Nullable="false" />
+          <Property Name="IDProperty" Type="int" Nullable="false" />
+          <Property Name="Value" Type="nvarchar" MaxLength="300" />
+        </EntityType>
+        <EntityType Name="Successor">
+          <Key>
+            <PropertyRef Name="IDObjectTypeParent" />
+            <PropertyRef Name="IDObjectTypeChild" />
+          </Key>
+          <Property Name="IDObjectTypeParent" Type="int" Nullable="false" />
+          <Property Name="IDObjectTypeChild" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Version">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IDParentInstance" Type="int" Nullable="false" />
+          <Property Name="IDPropertyValue" Type="int" Nullable="false" />
+          <Property Name="OldValue" Type="nvarchar" MaxLength="300" />
+          <Property Name="NewValue" Type="nvarchar" MaxLength="300" />
+        </EntityType>
+        <Association Name="FK_Container_ObjectInstance">
+          <End Role="ObjectInstance" Type="Self.ObjectInstance" Multiplicity="1" />
+          <End Role="Container" Type="Self.Container" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ObjectInstance">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Container">
+              <PropertyRef Name="IDInstanceContainer" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Container_ObjectInstance1">
+          <End Role="ObjectInstance" Type="Self.ObjectInstance" Multiplicity="1" />
+          <End Role="Container" Type="Self.Container" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ObjectInstance">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Container">
+              <PropertyRef Name="IDInstanceObject" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Object_ObjectType">
+          <End Role="ObjectType" Type="Self.ObjectType" Multiplicity="1" />
+          <End Role="ObjectInstance" Type="Self.ObjectInstance" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ObjectType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ObjectInstance">
+              <PropertyRef Name="IdTypeObject" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ObjectInstance_ObjectInstance1">
+          <End Role="ObjectInstance" Type="Self.ObjectInstance" Multiplicity="0..1" />
+          <End Role="ObjectInstance1" Type="Self.ObjectInstance" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ObjectInstance">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ObjectInstance1">
+              <PropertyRef Name="BaseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ObjectProperty_ObjectType">
+          <End Role="ObjectType" Type="Self.ObjectType" Multiplicity="1" />
+          <End Role="Properties" Type="Self.Properties" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ObjectType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Properties">
+              <PropertyRef Name="IdTypeObject" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ObjectProperty_PropertyType">
+          <End Role="PropertyType" Type="Self.PropertyType" Multiplicity="1" />
+          <End Role="Properties" Type="Self.Properties" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PropertyType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Properties">
+              <PropertyRef Name="IdPropertyType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PropertyValues_ObjectInstance">
+          <End Role="ObjectInstance" Type="Self.ObjectInstance" Multiplicity="1" />
+          <End Role="PropertyValues" Type="Self.PropertyValues" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ObjectInstance">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PropertyValues">
+              <PropertyRef Name="IDInstanceObject" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PropertyValues_Properties">
+          <End Role="Properties" Type="Self.Properties" Multiplicity="1" />
+          <End Role="PropertyValues" Type="Self.PropertyValues" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Properties">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PropertyValues">
+              <PropertyRef Name="IDProperty" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Version_ObjectInstance">
+          <End Role="ObjectInstance" Type="Self.ObjectInstance" Multiplicity="1" />
+          <End Role="Version" Type="Self.Version" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="ObjectInstance">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Version">
+              <PropertyRef Name="ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Version_PropertyValues">
+          <End Role="PropertyValues" Type="Self.PropertyValues" Multiplicity="1" />
+          <End Role="Version" Type="Self.Version" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PropertyValues">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Version">
+              <PropertyRef Name="IDPropertyValue" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="GetInstancesValues" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="typeId" Type="int" Mode="In" />
+        </Function>
+        <EntityContainer Name="DBEOModelStoreContainer">
+          <EntitySet Name="Container" EntityType="Self.Container" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ObjectInstance" EntityType="Self.ObjectInstance" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ObjectType" EntityType="Self.ObjectType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Properties" EntityType="Self.Properties" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PropertyType" EntityType="Self.PropertyType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PropertyValues" EntityType="Self.PropertyValues" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Successor" EntityType="Self.Successor" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Version" EntityType="Self.Version" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Container_ObjectInstance" Association="Self.FK_Container_ObjectInstance">
+            <End Role="ObjectInstance" EntitySet="ObjectInstance" />
+            <End Role="Container" EntitySet="Container" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Container_ObjectInstance1" Association="Self.FK_Container_ObjectInstance1">
+            <End Role="ObjectInstance" EntitySet="ObjectInstance" />
+            <End Role="Container" EntitySet="Container" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Object_ObjectType" Association="Self.FK_Object_ObjectType">
+            <End Role="ObjectType" EntitySet="ObjectType" />
+            <End Role="ObjectInstance" EntitySet="ObjectInstance" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ObjectInstance_ObjectInstance1" Association="Self.FK_ObjectInstance_ObjectInstance1">
+            <End Role="ObjectInstance" EntitySet="ObjectInstance" />
+            <End Role="ObjectInstance1" EntitySet="ObjectInstance" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ObjectProperty_ObjectType" Association="Self.FK_ObjectProperty_ObjectType">
+            <End Role="ObjectType" EntitySet="ObjectType" />
+            <End Role="Properties" EntitySet="Properties" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ObjectProperty_PropertyType" Association="Self.FK_ObjectProperty_PropertyType">
+            <End Role="PropertyType" EntitySet="PropertyType" />
+            <End Role="Properties" EntitySet="Properties" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PropertyValues_ObjectInstance" Association="Self.FK_PropertyValues_ObjectInstance">
+            <End Role="ObjectInstance" EntitySet="ObjectInstance" />
+            <End Role="PropertyValues" EntitySet="PropertyValues" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PropertyValues_Properties" Association="Self.FK_PropertyValues_Properties">
+            <End Role="Properties" EntitySet="Properties" />
+            <End Role="PropertyValues" EntitySet="PropertyValues" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Version_ObjectInstance" Association="Self.FK_Version_ObjectInstance">
+            <End Role="ObjectInstance" EntitySet="ObjectInstance" />
+            <End Role="Version" EntitySet="Version" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Version_PropertyValues" Association="Self.FK_Version_PropertyValues">
+            <End Role="PropertyValues" EntitySet="PropertyValues" />
+            <End Role="Version" EntitySet="Version" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DBEOModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="ObjectInstance">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdTypeObject" Type="Int32" Nullable="false" />
+          <Property Name="BaseId" Type="Int32" />
+          <NavigationProperty Name="ObjectType" Relationship="Self.FK_Object_ObjectType" FromRole="ObjectInstance" ToRole="ObjectType" />
+          <NavigationProperty Name="ObjectInstance1" Relationship="Self.FK_ObjectInstance_ObjectInstance1" FromRole="ObjectInstance" ToRole="ObjectInstance1" />
+          <NavigationProperty Name="ObjectInstance2" Relationship="Self.FK_ObjectInstance_ObjectInstance1" FromRole="ObjectInstance1" ToRole="ObjectInstance" />
+          <NavigationProperty Name="Container" Relationship="DBEOModel.FK_Container_ObjectInstance" FromRole="ObjectInstance" ToRole="Container" />
+          <NavigationProperty Name="Container1" Relationship="DBEOModel.FK_Container_ObjectInstance1" FromRole="ObjectInstance" ToRole="Container" />
+          <NavigationProperty Name="PropertyValues" Relationship="DBEOModel.FK_PropertyValues_ObjectInstance" FromRole="ObjectInstance" ToRole="PropertyValues" />
+          <NavigationProperty Name="Version" Relationship="DBEOModel.FK_Version_ObjectInstance" FromRole="ObjectInstance" ToRole="Version" />
+        </EntityType>
+        <EntityType Name="ObjectType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="ObjectInstance" Relationship="Self.FK_Object_ObjectType" FromRole="ObjectType" ToRole="ObjectInstance" />
+          <NavigationProperty Name="Properties" Relationship="DBEOModel.FK_ObjectProperty_ObjectType1" FromRole="ObjectType" ToRole="Properties" />
+        </EntityType>
+        <EntityType Name="PropertyType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PropertyType1" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Properties" Relationship="DBEOModel.FK_ObjectProperty_PropertyType1" FromRole="PropertyType" ToRole="Properties" />
+        </EntityType>
+        <EntityType Name="Successor">
+          <Key>
+            <PropertyRef Name="IDObjectTypeParent" />
+            <PropertyRef Name="IDObjectTypeChild" />
+          </Key>
+          <Property Name="IDObjectTypeParent" Type="Int32" Nullable="false" />
+          <Property Name="IDObjectTypeChild" Type="Int32" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Object_ObjectType">
+          <End Role="ObjectType" Type="Self.ObjectType" Multiplicity="1" />
+          <End Role="ObjectInstance" Type="Self.ObjectInstance" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ObjectType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ObjectInstance">
+              <PropertyRef Name="IdTypeObject" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ObjectInstance_ObjectInstance1">
+          <End Role="ObjectInstance" Type="Self.ObjectInstance" Multiplicity="0..1" />
+          <End Role="ObjectInstance1" Type="Self.ObjectInstance" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ObjectInstance">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ObjectInstance1">
+              <PropertyRef Name="BaseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DBEOEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="ObjectInstance" EntityType="Self.ObjectInstance" />
+          <EntitySet Name="ObjectType" EntityType="Self.ObjectType" />
+          <EntitySet Name="PropertyType" EntityType="Self.PropertyType" />
+          <EntitySet Name="Successor" EntityType="Self.Successor" />
+          <AssociationSet Name="FK_Object_ObjectType" Association="Self.FK_Object_ObjectType">
+            <End Role="ObjectType" EntitySet="ObjectType" />
+            <End Role="ObjectInstance" EntitySet="ObjectInstance" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ObjectInstance_ObjectInstance1" Association="Self.FK_ObjectInstance_ObjectInstance1">
+            <End Role="ObjectInstance" EntitySet="ObjectInstance" />
+            <End Role="ObjectInstance1" EntitySet="ObjectInstance" />
+          </AssociationSet>
+          <EntitySet Name="Container" EntityType="DBEOModel.Container" />
+          <EntitySet Name="Properties" EntityType="DBEOModel.Properties" />
+          <EntitySet Name="PropertyValues" EntityType="DBEOModel.PropertyValues" />
+          <EntitySet Name="Version" EntityType="DBEOModel.Version" />
+          <AssociationSet Name="FK_Container_ObjectInstance" Association="DBEOModel.FK_Container_ObjectInstance">
+            <End Role="ObjectInstance" EntitySet="ObjectInstance" />
+            <End Role="Container" EntitySet="Container" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Container_ObjectInstance1" Association="DBEOModel.FK_Container_ObjectInstance1">
+            <End Role="ObjectInstance" EntitySet="ObjectInstance" />
+            <End Role="Container" EntitySet="Container" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PropertyValues_ObjectInstance" Association="DBEOModel.FK_PropertyValues_ObjectInstance">
+            <End Role="ObjectInstance" EntitySet="ObjectInstance" />
+            <End Role="PropertyValues" EntitySet="PropertyValues" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Version_ObjectInstance" Association="DBEOModel.FK_Version_ObjectInstance">
+            <End Role="ObjectInstance" EntitySet="ObjectInstance" />
+            <End Role="Version" EntitySet="Version" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ObjectProperty_ObjectType1" Association="DBEOModel.FK_ObjectProperty_ObjectType1">
+            <End Role="ObjectType" EntitySet="ObjectType" />
+            <End Role="Properties" EntitySet="Properties" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ObjectProperty_PropertyType1" Association="DBEOModel.FK_ObjectProperty_PropertyType1">
+            <End Role="PropertyType" EntitySet="PropertyType" />
+            <End Role="Properties" EntitySet="Properties" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PropertyValues_Properties" Association="DBEOModel.FK_PropertyValues_Properties">
+            <End Role="Properties" EntitySet="Properties" />
+            <End Role="PropertyValues" EntitySet="PropertyValues" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Version_PropertyValues" Association="DBEOModel.FK_Version_PropertyValues">
+            <End Role="PropertyValues" EntitySet="PropertyValues" />
+            <End Role="Version" EntitySet="Version" />
+          </AssociationSet>
+          <FunctionImport Name="GetInstancesValues">
+            <Parameter Name="typeId" Mode="In" Type="Int32" />
+          </FunctionImport>
+        </EntityContainer>
+        <EntityType Name="Container">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IDInstanceContainer" Type="Int32" Nullable="false" />
+          <Property Name="IDInstanceObject" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="ObjectInstance" Relationship="DBEOModel.FK_Container_ObjectInstance" FromRole="Container" ToRole="ObjectInstance" />
+          <NavigationProperty Name="ObjectInstance1" Relationship="DBEOModel.FK_Container_ObjectInstance1" FromRole="Container" ToRole="ObjectInstance" />
+        </EntityType>
+        <EntityType Name="Properties">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdTypeObject" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IdPropertyType" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="ObjectType" Relationship="DBEOModel.FK_ObjectProperty_ObjectType1" FromRole="Properties" ToRole="ObjectType" />
+          <NavigationProperty Name="PropertyType" Relationship="DBEOModel.FK_ObjectProperty_PropertyType1" FromRole="Properties" ToRole="PropertyType" />
+          <NavigationProperty Name="PropertyValues" Relationship="DBEOModel.FK_PropertyValues_Properties" FromRole="Properties" ToRole="PropertyValues" />
+        </EntityType>
+        <EntityType Name="PropertyValues">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IDInstanceObject" Type="Int32" Nullable="false" />
+          <Property Name="IDProperty" Type="Int32" Nullable="false" />
+          <Property Name="Value" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="ObjectInstance" Relationship="DBEOModel.FK_PropertyValues_ObjectInstance" FromRole="PropertyValues" ToRole="ObjectInstance" />
+          <NavigationProperty Name="Properties" Relationship="DBEOModel.FK_PropertyValues_Properties" FromRole="PropertyValues" ToRole="Properties" />
+          <NavigationProperty Name="Version" Relationship="DBEOModel.FK_Version_PropertyValues" FromRole="PropertyValues" ToRole="Version" />
+        </EntityType>
+        <EntityType Name="Version">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IDParentInstance" Type="Int32" Nullable="false" />
+          <Property Name="IDPropertyValue" Type="Int32" Nullable="false" />
+          <Property Name="OldValue" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="NewValue" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="ObjectInstance" Relationship="DBEOModel.FK_Version_ObjectInstance" FromRole="Version" ToRole="ObjectInstance" />
+          <NavigationProperty Name="PropertyValues" Relationship="DBEOModel.FK_Version_PropertyValues" FromRole="Version" ToRole="PropertyValues" />
+        </EntityType>
+        <Association Name="FK_Container_ObjectInstance">
+          <End Type="DBEOModel.ObjectInstance" Role="ObjectInstance" Multiplicity="1" />
+          <End Type="DBEOModel.Container" Role="Container" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ObjectInstance">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Container">
+              <PropertyRef Name="IDInstanceContainer" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Container_ObjectInstance1">
+          <End Type="DBEOModel.ObjectInstance" Role="ObjectInstance" Multiplicity="1" />
+          <End Type="DBEOModel.Container" Role="Container" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ObjectInstance">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Container">
+              <PropertyRef Name="IDInstanceObject" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PropertyValues_ObjectInstance">
+          <End Type="DBEOModel.ObjectInstance" Role="ObjectInstance" Multiplicity="1" />
+          <End Type="DBEOModel.PropertyValues" Role="PropertyValues" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ObjectInstance">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PropertyValues">
+              <PropertyRef Name="IDInstanceObject" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Version_ObjectInstance">
+          <End Type="DBEOModel.ObjectInstance" Role="ObjectInstance" Multiplicity="1" />
+          <End Type="DBEOModel.Version" Role="Version" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="ObjectInstance">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Version">
+              <PropertyRef Name="ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ObjectProperty_ObjectType1">
+          <End Type="DBEOModel.ObjectType" Role="ObjectType" Multiplicity="1" />
+          <End Type="DBEOModel.Properties" Role="Properties" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ObjectType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Properties">
+              <PropertyRef Name="IdTypeObject" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ObjectProperty_PropertyType1">
+          <End Type="DBEOModel.PropertyType" Role="PropertyType" Multiplicity="1" />
+          <End Type="DBEOModel.Properties" Role="Properties" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PropertyType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Properties">
+              <PropertyRef Name="IdPropertyType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PropertyValues_Properties">
+          <End Type="DBEOModel.Properties" Role="Properties" Multiplicity="1" />
+          <End Type="DBEOModel.PropertyValues" Role="PropertyValues" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Properties">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PropertyValues">
+              <PropertyRef Name="IDProperty" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Version_PropertyValues">
+          <End Type="DBEOModel.PropertyValues" Role="PropertyValues" Multiplicity="1" />
+          <End Type="DBEOModel.Version" Role="Version" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PropertyValues">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Version">
+              <PropertyRef Name="IDPropertyValue" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DBEOModelStoreContainer" CdmEntityContainer="DBEOEntities">
+          <EntitySetMapping Name="ObjectInstance">
+            <EntityTypeMapping TypeName="DBEOModel.ObjectInstance">
+              <MappingFragment StoreEntitySet="ObjectInstance">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="IdTypeObject" ColumnName="IdTypeObject" />
+                <ScalarProperty Name="BaseId" ColumnName="BaseId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ObjectType">
+            <EntityTypeMapping TypeName="DBEOModel.ObjectType">
+              <MappingFragment StoreEntitySet="ObjectType">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PropertyType">
+            <EntityTypeMapping TypeName="DBEOModel.PropertyType">
+              <MappingFragment StoreEntitySet="PropertyType">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="PropertyType1" ColumnName="PropertyType" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Successor">
+            <EntityTypeMapping TypeName="DBEOModel.Successor">
+              <MappingFragment StoreEntitySet="Successor">
+                <ScalarProperty Name="IDObjectTypeParent" ColumnName="IDObjectTypeParent" />
+                <ScalarProperty Name="IDObjectTypeChild" ColumnName="IDObjectTypeChild" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Container">
+            <EntityTypeMapping TypeName="DBEOModel.Container">
+              <MappingFragment StoreEntitySet="Container">
+                <ScalarProperty Name="IDInstanceObject" ColumnName="IDInstanceObject" />
+                <ScalarProperty Name="IDInstanceContainer" ColumnName="IDInstanceContainer" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Properties">
+            <EntityTypeMapping TypeName="DBEOModel.Properties">
+              <MappingFragment StoreEntitySet="Properties">
+                <ScalarProperty Name="IdPropertyType" ColumnName="IdPropertyType" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="IdTypeObject" ColumnName="IdTypeObject" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PropertyValues">
+            <EntityTypeMapping TypeName="DBEOModel.PropertyValues">
+              <MappingFragment StoreEntitySet="PropertyValues">
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="IDProperty" ColumnName="IDProperty" />
+                <ScalarProperty Name="IDInstanceObject" ColumnName="IDInstanceObject" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Version">
+            <EntityTypeMapping TypeName="DBEOModel.Version">
+              <MappingFragment StoreEntitySet="Version">
+                <ScalarProperty Name="NewValue" ColumnName="NewValue" />
+                <ScalarProperty Name="OldValue" ColumnName="OldValue" />
+                <ScalarProperty Name="IDPropertyValue" ColumnName="IDPropertyValue" />
+                <ScalarProperty Name="IDParentInstance" ColumnName="IDParentInstance" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetInstancesValues" FunctionName="DBEOModel.Store.GetInstancesValues" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
