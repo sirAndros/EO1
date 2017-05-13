@@ -17,28 +17,28 @@ namespace EdObjects.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public ObjectInstance()
         {
-            this.ObjectInstance1 = new HashSet<ObjectInstance>();
             this.Container = new HashSet<Container>();
             this.Container1 = new HashSet<Container>();
+            this.ObjectInstance1 = new HashSet<ObjectInstance>();
             this.PropertyValues = new HashSet<PropertyValues>();
-            this.Version1 = new HashSet<Version>();
+            this.Version = new HashSet<Version>();
         }
     
         public int Id { get; set; }
         public int IdTypeObject { get; set; }
         public Nullable<int> BaseId { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Container> Container { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Container> Container1 { get; set; }
         public virtual ObjectType ObjectType { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ObjectInstance> ObjectInstance1 { get; set; }
         public virtual ObjectInstance ObjectInstance2 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Container> Container { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Container> Container1 { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PropertyValues> PropertyValues { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Version> Version1 { get; set; }
+        public virtual ICollection<Version> Version { get; set; }
     }
 }

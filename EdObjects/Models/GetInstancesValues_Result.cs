@@ -10,17 +10,12 @@
 namespace EdObjects.Models
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class Version
+    public partial class GetInstancesValues_Result
     {
-        public int ID { get; set; }
-        public int IDParentInstance { get; set; }
-        public int IDPropertyValue { get; set; }
-        public string OldValue { get; set; }
-        public string NewValue { get; set; }
-    
-        public virtual ObjectInstance ObjectInstance { get; set; }
-        public virtual PropertyValues PropertyValues { get; set; }
+        public Nullable<int> ID { get; set; }
+        public Nullable<int> BaseID { get; set; }
+        public string Property { get; set; }
+        public string Value { get; set; }
     }
 }

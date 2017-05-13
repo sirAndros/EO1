@@ -20,6 +20,20 @@ namespace EdObjects.Controllers
             return View(db.ObjectType.ToList());
         }
 
+        public ActionResult Instances(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var instances = db.GetInstancesValues(id).ToList();
+            if (instances == null || !instances.Any())
+            {
+                return HttpNotFound();
+            }
+            return View(instances);
+        }
+
         // GET: EDObject/Details/5
         public ActionResult Details(int? id)
         {

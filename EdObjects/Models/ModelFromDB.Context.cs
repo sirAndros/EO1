@@ -27,21 +27,23 @@ namespace EdObjects.Models
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<Container> Container { get; set; }
         public virtual DbSet<ObjectInstance> ObjectInstance { get; set; }
         public virtual DbSet<ObjectType> ObjectType { get; set; }
-        public virtual DbSet<PropertyType> PropertyType { get; set; }
-        public virtual DbSet<Container> Container { get; set; }
         public virtual DbSet<Properties> Properties { get; set; }
+        public virtual DbSet<PropertyType> PropertyType { get; set; }
         public virtual DbSet<PropertyValues> PropertyValues { get; set; }
         public virtual DbSet<Version> Version { get; set; }
     
-        public virtual int GetInstancesValues(Nullable<int> typeId)
+        public virtual ObjectResult<GetInstancesValues_Result> GetInstancesValues(Nullable<int> typeId)
         {
             var typeIdParameter = typeId.HasValue ?
                 new ObjectParameter("typeId", typeId) :
                 new ObjectParameter("typeId", typeof(int));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("GetInstancesValues", typeIdParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetInstancesValues_Result>("GetInstancesValues", typeIdParameter);
         }
+
+        public System.Data.Entity.DbSet<EdObjects.Models.GetInstancesValues_Result> GetInstancesValues_Result { get; set; }
     }
 }

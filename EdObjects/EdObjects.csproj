@@ -55,6 +55,12 @@
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.3\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="SharkDev.MVC, Version=1.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharkTree.1.2.1.2\lib\SharkDev.MVC.dll</HintPath>
+    </Reference>
+    <Reference Include="SharkDev.Web.Controls, Version=1.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharkTree.1.2.1.2\lib\SharkDev.Web.Controls.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -157,6 +163,9 @@
     <Compile Include="Models\Container.cs">
       <DependentUpon>ModelFromDB.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\GetInstancesValues_Result.cs">
+      <DependentUpon>ModelFromDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\ModelFromDB.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -196,6 +205,8 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Images\SharkDev.TreeView.png" />
+    <Content Include="Content\SharkDev.TreeView.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -233,6 +244,7 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\SharkDev.treeView.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -254,6 +266,7 @@
     <Content Include="Views\EDObject\Details.cshtml" />
     <Content Include="Views\EDObject\Edit.cshtml" />
     <Content Include="Views\EDObject\Index.cshtml" />
+    <Content Include="Views\EDObject\Instances.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
