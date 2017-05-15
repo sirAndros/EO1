@@ -1,16 +1,74 @@
-﻿@model IEnumerable<EdObjects.Models.ObjectType>
+﻿@using SharkDev.MVC
+
+@model IEnumerable<EdObjects.Models.ObjectType>
 
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
 
+@section addToHead
+{
+    <script src="https://code.jquery.com/jquery-1.9.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.9.0/jquery-ui.js"></script>
+    <script src="@Url.Content("~/Scripts/SharkDev.treeView.js")"></script>
+    <link href="@Url.Content("~/Content/SharkDev.TreeView.css")" rel="stylesheet" />
+}
+
+
+
+<div class="row">
+    <div class="col-sm-3">
+        @Html.SharkDev().TreeView(settings =>
+       {
+           settings.Id = "typesTreeViewContainer";
+           settings.Header.Text = "Дерево типов";
+           settings.Header.Visible = false;
+           settings.Header.Expanded = true;
+           settings.ClientHandlers.ContentSelect = "function (e) { " +
+                   "$('#instancesTree').text('Loading...');" +
+                   "$('#instancesTree').load('" + Url.Action("GetInstancesTree", "EDObject") +"?type=' +e.id);" +
+               "}";
+           settings.Height = 300;
+           settings.Width = 270;
+           settings.DataOnClient = true;
+       }).GetContent(ViewBag.TypesTree)
+    </div>
+    <div id="instancesTree" class="col-sm-3">
+    </div>
+    <div id="instanceProperties" class="col-sm-6">
+    </div>
+</div>
+
+
+
+
+
+
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#typesTreeViewContainer_autoCompleteInput").addClass("form-control text-box single-line");
+            $("#typesTreeViewContainer_autoCompleteInput").attr("placeholder", "Поиск");
+            $("#typesTreeViewContainer").css("width","100%")
+        });
+    </script>
+}
+
+
+
+
+@*<h2>Types</h2>
 <p>
     @Html.ActionLink("Создать новую сущность", "Create")
-</p>
-<table class="table">
+</p>*@
+
+
+
+@*<table class="table">
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.Name)
@@ -32,4 +90,4 @@
     </tr>
 }
 
-</table>
+</table>*@

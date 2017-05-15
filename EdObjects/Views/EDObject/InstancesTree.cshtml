@@ -1,0 +1,34 @@
+﻿@using SharkDev.MVC
+
+@if (ViewBag.ObjectsTree != null)
+{
+    @Html.SharkDev().TreeView(settings =>
+{
+    settings.Id = "instancesTreeViewContainer";
+    settings.Header.Text = "Дерево экземпляров";
+    settings.Header.Visible = false;
+    settings.Header.Expanded = true;
+    settings.ClientHandlers.ContentSelect = "function (e) { " +
+                   "$('#instanceProperties').text('Loading...');" +
+                   "$('#instanceProperties').load('" + Url.Action("GetInstancesProperties", "EDObject") + "?type=' +e.id);" +
+               "}";
+    settings.Height = 300;
+    settings.Width = 270;
+    settings.DataOnClient = true;
+}).GetContent(ViewBag.ObjectsTree)
+}
+
+<p>
+    <span id="treeClickContainer"></span>
+</p>
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#instancesTreeViewContainer_autoCompleteInput").addClass("form-control text-box single-line");
+            $("#instancesTreeViewContainer_autoCompleteInput").attr("placeholder", "Поиск");
+            $("#instancesTreeViewContainer").css("width", "100%")
+        });
+    </script>
+}

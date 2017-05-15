@@ -28,6 +28,9 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="IdTypeObject" Type="int" Nullable="false" />
           <Property Name="BaseId" Type="int" />
+          <Property Name="DisplayName" Type="nvarchar" MaxLength="200" />
+          <Property Name="CreateDate" Type="datetime" />
+          <Property Name="ChangeDate" Type="datetime" />
         </EntityType>
         <EntityType Name="ObjectType">
           <Key>
@@ -71,6 +74,7 @@
           <Property Name="IDPropertyValue" Type="int" Nullable="false" />
           <Property Name="OldValue" Type="nvarchar" MaxLength="300" />
           <Property Name="NewValue" Type="nvarchar" MaxLength="300" />
+          <Property Name="ChangeDate" Type="datetime" />
         </EntityType>
         <Association Name="FK_Container_ObjectInstance">
           <End Role="ObjectInstance" Type="Self.ObjectInstance" Multiplicity="1" />
@@ -228,9 +232,33 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="GetDistinctName" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="typeId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="GetInstanceByName" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="name" Type="varchar" Mode="In" />
+          <Parameter Name="typeId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="GetInstanceProperties" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="instanceID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="GetInstancesTree" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="type" Type="int" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="Id" Type="int" />
+                <Property Name="DisplayName" Type="nvarchar" MaxLength="200" />
+                <Property Name="BaseId" Type="int" />
+                <Property Name="Parent" Type="int" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
         <Function Name="GetInstancesValues" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="typeId" Type="int" Mode="In" />
         </Function>
+        <Function Name="getPropertyValue" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <EntityContainer Name="DBEOModelStoreContainer">
           <EntitySet Name="Container" EntityType="Self.Container" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ContainerRestrictions" EntityType="Self.ContainerRestrictions" Schema="dbo" store:Type="Tables" />
@@ -354,7 +382,21 @@
             <End Role="ObjectType1" EntitySet="ObjectType" />
           </AssociationSet>
           <FunctionImport Name="GetInstancesValues" ReturnType="Collection(DBEOModel.GetInstancesValues_Result)">
+          <Parameter Name="typeId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetDistinctName" ReturnType="Collection(DBEOModel.GetDistinctName_Result)">
+          <Parameter Name="typeId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetInstanceByName" ReturnType="Collection(DBEOModel.GetInstanceByName_Result)">
+            <Parameter Name="name" Mode="In" Type="String" />
             <Parameter Name="typeId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="getPropertyValue" />
+          <FunctionImport Name="GetInstancesTree" IsComposable="true" ReturnType="Collection(DBEOModel.GetInstancesTree_Result)">
+          <Parameter Name="type" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetInstanceProperties" ReturnType="Collection(DBEOModel.GetInstanceProperties_Result)">
+            <Parameter Name="instanceID" Mode="In" Type="Int32" />
           </FunctionImport>
         </EntityContainer>
         <EntityType Name="Container">
@@ -381,6 +423,9 @@
           <NavigationProperty Name="ObjectInstance2" Relationship="DBEOModel.FK_ObjectInstance_ObjectInstance1" FromRole="ObjectInstance1" ToRole="ObjectInstance" />
           <NavigationProperty Name="PropertyValues" Relationship="DBEOModel.FK_PropertyValues_ObjectInstance" FromRole="ObjectInstance" ToRole="PropertyValues" />
           <NavigationProperty Name="Version" Relationship="DBEOModel.FK_Version_ObjectInstance" FromRole="ObjectInstance" ToRole="Version" />
+          <Property Name="DisplayName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="CreateDate" Type="DateTime" Precision="3" />
+          <Property Name="ChangeDate" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityType Name="ObjectType">
           <Key>
@@ -439,6 +484,7 @@
           <Property Name="NewValue" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="ObjectInstance" Relationship="DBEOModel.FK_Version_ObjectInstance" FromRole="Version" ToRole="ObjectInstance" />
           <NavigationProperty Name="PropertyValues" Relationship="DBEOModel.FK_Version_PropertyValues" FromRole="Version" ToRole="PropertyValues" />
+          <Property Name="ChangeDate" Type="DateTime" Precision="3" />
         </EntityType>
         <Association Name="FK_Container_ObjectInstance">
           <End Type="DBEOModel.ObjectInstance" Role="ObjectInstance" Multiplicity="1" />
@@ -582,6 +628,30 @@
           <Property Type="String" Name="Property" Nullable="false" MaxLength="50" />
           <Property Type="String" Name="Value" Nullable="true" MaxLength="300" />
         </ComplexType>
+        <ComplexType Name="GetDistinctName_Result">
+          <Property Type="Int32" Name="IDInstanceObject" Nullable="false" />
+          <Property Type="String" Name="Value" Nullable="true" MaxLength="300" />
+        </ComplexType>
+        <ComplexType Name="GetInstanceByName_Result">
+          <Property Type="Int32" Name="ID" Nullable="true" />
+          <Property Type="Int32" Name="BaseID" Nullable="true" />
+          <Property Type="String" Name="Property" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Value" Nullable="true" MaxLength="300" />
+        </ComplexType>
+        <ComplexType Name="GetInstancesTree_Result">
+          <Property Type="Int32" Name="Id" Nullable="true" />
+          <Property Type="String" Name="DisplayName" Nullable="true" MaxLength="200" />
+          <Property Type="Int32" Name="BaseId" Nullable="true" />
+          <Property Type="Int32" Name="Parent" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="GetInstanceProperties_Result">
+          <Property Type="Int32" Name="ValueID" Nullable="true" />
+          <Property Type="Int32" Name="InstanceId" Nullable="true" />
+          <Property Type="Int32" Name="BaseID" Nullable="true" />
+          <Property Type="Int32" Name="PropertyID" Nullable="true" />
+          <Property Type="String" Name="Property" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Value" Nullable="true" MaxLength="300" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -600,6 +670,9 @@
           <EntitySetMapping Name="ObjectInstance">
             <EntityTypeMapping TypeName="DBEOModel.ObjectInstance">
               <MappingFragment StoreEntitySet="ObjectInstance">
+                <ScalarProperty Name="ChangeDate" ColumnName="ChangeDate" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
                 <ScalarProperty Name="BaseId" ColumnName="BaseId" />
                 <ScalarProperty Name="IdTypeObject" ColumnName="IdTypeObject" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
@@ -646,6 +719,7 @@
           <EntitySetMapping Name="Version">
             <EntityTypeMapping TypeName="DBEOModel.Version">
               <MappingFragment StoreEntitySet="Version">
+                <ScalarProperty Name="ChangeDate" ColumnName="ChangeDate" />
                 <ScalarProperty Name="NewValue" ColumnName="NewValue" />
                 <ScalarProperty Name="OldValue" ColumnName="OldValue" />
                 <ScalarProperty Name="IDPropertyValue" ColumnName="IDPropertyValue" />
@@ -667,6 +741,47 @@
               <ComplexTypeMapping TypeName="DBEOModel.GetInstancesValues_Result">
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="BaseID" ColumnName="BaseID" />
+                <ScalarProperty Name="Property" ColumnName="Property" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetDistinctName" FunctionName="DBEOModel.Store.GetDistinctName">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DBEOModel.GetDistinctName_Result">
+                <ScalarProperty Name="IDInstanceObject" ColumnName="IDInstanceObject" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetInstanceByName" FunctionName="DBEOModel.Store.GetInstanceByName">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DBEOModel.GetInstanceByName_Result">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="BaseID" ColumnName="BaseID" />
+                <ScalarProperty Name="Property" ColumnName="Property" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="getPropertyValue" FunctionName="DBEOModel.Store.getPropertyValue" />
+          <FunctionImportMapping FunctionImportName="GetInstancesTree" FunctionName="DBEOModel.Store.GetInstancesTree">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DBEOModel.GetInstancesTree_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
+                <ScalarProperty Name="BaseId" ColumnName="BaseId" />
+                <ScalarProperty Name="Parent" ColumnName="Parent" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetInstanceProperties" FunctionName="DBEOModel.Store.GetInstanceProperties">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DBEOModel.GetInstanceProperties_Result">
+                <ScalarProperty Name="ValueID" ColumnName="ValueID" />
+                <ScalarProperty Name="InstanceId" ColumnName="InstanceId" />
+                <ScalarProperty Name="BaseID" ColumnName="BaseID" />
+                <ScalarProperty Name="PropertyID" ColumnName="PropertyID" />
                 <ScalarProperty Name="Property" ColumnName="Property" />
                 <ScalarProperty Name="Value" ColumnName="Value" />
               </ComplexTypeMapping>

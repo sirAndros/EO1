@@ -19,6 +19,7 @@ namespace EdObjects.Models
         public int IDPropertyValue { get; set; }
         public string OldValue { get; set; }
         public string NewValue { get; set; }
+        public Nullable<System.DateTime> ChangeDate { get; set; }
     
         public virtual ObjectInstance ObjectInstance { get; set; }
         public virtual PropertyValues PropertyValues { get; set; }

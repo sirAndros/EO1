@@ -55,6 +55,9 @@
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.3\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="SharkDev.MVC, Version=1.2.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SharkTree.1.2.1.2\lib\SharkDev.MVC.dll</HintPath>
     </Reference>
@@ -126,9 +129,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.ApplicationInsights">
       <HintPath>..\packages\Microsoft.ApplicationInsights.2.2.0\lib\net45\Microsoft.ApplicationInsights.dll</HintPath>
     </Reference>
@@ -161,6 +161,18 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Container.cs">
+      <DependentUpon>ModelFromDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetDistinctName_Result.cs">
+      <DependentUpon>ModelFromDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetInstanceByName_Result.cs">
+      <DependentUpon>ModelFromDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetInstanceProperties_Result.cs">
+      <DependentUpon>ModelFromDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetInstancesTree_Result.cs">
       <DependentUpon>ModelFromDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\GetInstancesValues_Result.cs">
@@ -267,6 +279,7 @@
     <Content Include="Views\EDObject\Edit.cshtml" />
     <Content Include="Views\EDObject\Index.cshtml" />
     <Content Include="Views\EDObject\Instances.cshtml" />
+    <Content Include="Views\EDObject\InstancesTree.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

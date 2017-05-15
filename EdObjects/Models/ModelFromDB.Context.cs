@@ -43,7 +43,51 @@ namespace EdObjects.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetInstancesValues_Result>("GetInstancesValues", typeIdParameter);
         }
-
-        public System.Data.Entity.DbSet<EdObjects.Models.GetInstancesValues_Result> GetInstancesValues_Result { get; set; }
+    
+        public virtual ObjectResult<GetDistinctName_Result> GetDistinctName(Nullable<int> typeId)
+        {
+            var typeIdParameter = typeId.HasValue ?
+                new ObjectParameter("typeId", typeId) :
+                new ObjectParameter("typeId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetDistinctName_Result>("GetDistinctName", typeIdParameter);
+        }
+    
+        public virtual ObjectResult<GetInstanceByName_Result> GetInstanceByName(string name, Nullable<int> typeId)
+        {
+            var nameParameter = name != null ?
+                new ObjectParameter("name", name) :
+                new ObjectParameter("name", typeof(string));
+    
+            var typeIdParameter = typeId.HasValue ?
+                new ObjectParameter("typeId", typeId) :
+                new ObjectParameter("typeId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetInstanceByName_Result>("GetInstanceByName", nameParameter, typeIdParameter);
+        }
+    
+        public virtual int getPropertyValue()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("getPropertyValue");
+        }
+    
+        [DbFunction("DBEOEntities", "GetInstancesTree")]
+        public virtual IQueryable<GetInstancesTree_Result> GetInstancesTree(Nullable<int> type)
+        {
+            var typeParameter = type.HasValue ?
+                new ObjectParameter("type", type) :
+                new ObjectParameter("type", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<GetInstancesTree_Result>("[DBEOEntities].[GetInstancesTree](@type)", typeParameter);
+        }
+    
+        public virtual ObjectResult<GetInstanceProperties_Result> GetInstanceProperties(Nullable<int> instanceID)
+        {
+            var instanceIDParameter = instanceID.HasValue ?
+                new ObjectParameter("instanceID", instanceID) :
+                new ObjectParameter("instanceID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetInstanceProperties_Result>("GetInstanceProperties", instanceIDParameter);
+        }
     }
 }

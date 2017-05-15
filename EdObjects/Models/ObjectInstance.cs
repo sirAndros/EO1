@@ -27,6 +27,9 @@ namespace EdObjects.Models
         public int Id { get; set; }
         public int IdTypeObject { get; set; }
         public Nullable<int> BaseId { get; set; }
+        public string DisplayName { get; set; }
+        public Nullable<System.DateTime> CreateDate { get; set; }
+        public Nullable<System.DateTime> ChangeDate { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Container> Container { get; set; }
