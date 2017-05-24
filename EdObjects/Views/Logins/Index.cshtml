@@ -1,0 +1,80 @@
+﻿@model IEnumerable<EdObjects.Models.Login>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>
+       
+       
+      
+    </h3>
+
+@*<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Password)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.User.Name)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Password)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.User.Name)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Login1 }) |
+            @Html.ActionLink("Details", "Details", new { id=item.Login1 }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.Login1 })
+        </td>
+    </tr>
+}
+
+</table>*@
+<ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#home">Войти</a></li>
+    <li><a data-toggle="tab" href="#menu1">Зарегистрироваться</a></li>
+</ul>
+
+<div class="tab-content">
+    <div id="home" class="tab-pane fade in active">
+        <div class="form-group">
+            <label for="usr">Логин:</label>
+            <input type="text" class="form-control" id="usr">
+        </div>
+        <div class="form-group">
+            <label for="pwd">Пароль:</label>
+            <input type="password" class="form-control" id="pwd">
+        </div>
+        
+        @Html.ActionLink("Забыли пароль?", "Index")
+        <p>
+            <button type="button" class="btn">Войти</button>
+        </p>
+    </div>
+    <div id="menu1" class="tab-pane fade">
+        <h3>Зарегистрироваться</h3>
+        <div class="form-group">
+            <label for="usr">Логин:</label>
+            <input type="text" class="form-control" id="usr">
+        </div>
+        <div class="form-group">
+            <label for="usr">Имя:</label>
+            <input type="text" class="form-control" id="usr">
+        </div>
+        <div class="form-group">
+            <label for="usr">Пароль:</label>
+            <input type="password" class="form-control" id="usr">
+        </div>
+        <button type="button" class="btn">Зарегистрироваться</button>
+    </div>
+</div>
+

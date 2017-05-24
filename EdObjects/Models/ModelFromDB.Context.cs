@@ -34,6 +34,8 @@ namespace EdObjects.Models
         public virtual DbSet<PropertyType> PropertyType { get; set; }
         public virtual DbSet<PropertyValues> PropertyValues { get; set; }
         public virtual DbSet<Version> Version { get; set; }
+        public virtual DbSet<Login> Login { get; set; }
+        public virtual DbSet<User> User { get; set; }
     
         public virtual ObjectResult<GetInstancesValues_Result> GetInstancesValues(Nullable<int> typeId)
         {
@@ -89,5 +91,7 @@ namespace EdObjects.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetInstanceProperties_Result>("GetInstanceProperties", instanceIDParameter);
         }
+
+        public System.Data.Entity.DbSet<EdObjects.Models.TypeAdder> TypeAdders { get; set; }
     }
 }

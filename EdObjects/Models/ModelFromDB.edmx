@@ -21,6 +21,14 @@
           <Property Name="IDParentType" Type="int" Nullable="false" />
           <Property Name="IDChildType" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="Login">
+          <Key>
+            <PropertyRef Name="Login" />
+          </Key>
+          <Property Name="Login" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="IdUser" Type="int" />
+        </EntityType>
         <EntityType Name="ObjectInstance">
           <Key>
             <PropertyRef Name="Id" />
@@ -64,6 +72,15 @@
           <Property Name="IDInstanceObject" Type="int" Nullable="false" />
           <Property Name="IDProperty" Type="int" Nullable="false" />
           <Property Name="Value" Type="nvarchar" MaxLength="300" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" />
+          <Property Name="DropDate" Type="datetime" />
         </EntityType>
         <EntityType Name="Version">
           <Key>
@@ -121,6 +138,18 @@
             </Principal>
             <Dependent Role="ContainerRestrictions">
               <PropertyRef Name="IDChildType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Login_User">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="Login" Type="Self.Login" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Login">
+              <PropertyRef Name="IdUser" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -262,11 +291,13 @@
         <EntityContainer Name="DBEOModelStoreContainer">
           <EntitySet Name="Container" EntityType="Self.Container" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ContainerRestrictions" EntityType="Self.ContainerRestrictions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Login" EntityType="Self.Login" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ObjectInstance" EntityType="Self.ObjectInstance" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ObjectType" EntityType="Self.ObjectType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Properties" EntityType="Self.Properties" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PropertyType" EntityType="Self.PropertyType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PropertyValues" EntityType="Self.PropertyValues" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Version" EntityType="Self.Version" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_Container_ObjectInstance" Association="Self.FK_Container_ObjectInstance">
             <End Role="ObjectInstance" EntitySet="ObjectInstance" />
@@ -283,6 +314,10 @@
           <AssociationSet Name="FK_ContainerRestrictions_ObjectType1" Association="Self.FK_ContainerRestrictions_ObjectType1">
             <End Role="ObjectType" EntitySet="ObjectType" />
             <End Role="ContainerRestrictions" EntitySet="ContainerRestrictions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Login_User" Association="Self.FK_Login_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="Login" EntitySet="Login" />
           </AssociationSet>
           <AssociationSet Name="FK_Object_ObjectType" Association="Self.FK_Object_ObjectType">
             <End Role="ObjectType" EntitySet="ObjectType" />
@@ -396,8 +431,14 @@
           <Parameter Name="type" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="GetInstanceProperties" ReturnType="Collection(DBEOModel.GetInstanceProperties_Result)">
-            <Parameter Name="instanceID" Mode="In" Type="Int32" />
+          <Parameter Name="instanceID" Mode="In" Type="Int32" />
           </FunctionImport>
+          <EntitySet Name="Login" EntityType="DBEOModel.Login" />
+          <EntitySet Name="User" EntityType="DBEOModel.User" />
+          <AssociationSet Name="FK_Login_User" Association="DBEOModel.FK_Login_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="Login" EntitySet="Login" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Container">
           <Key>
@@ -645,13 +686,44 @@
           <Property Type="Int32" Name="Parent" Nullable="true" />
         </ComplexType>
         <ComplexType Name="GetInstanceProperties_Result">
-          <Property Type="Int32" Name="ValueID" Nullable="true" />
           <Property Type="Int32" Name="InstanceId" Nullable="true" />
           <Property Type="Int32" Name="BaseID" Nullable="true" />
           <Property Type="Int32" Name="PropertyID" Nullable="true" />
           <Property Type="String" Name="Property" Nullable="false" MaxLength="50" />
           <Property Type="String" Name="Value" Nullable="true" MaxLength="300" />
+          <Property Type="Int32" Name="ID" Nullable="true" />
         </ComplexType>
+        <EntityType Name="Login">
+          <Key>
+            <PropertyRef Name="Login1" />
+          </Key>
+          <Property Name="Login1" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="IdUser" Type="Int32" />
+          <NavigationProperty Name="User" Relationship="DBEOModel.FK_Login_User" FromRole="Login" ToRole="User" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CreateDate" Type="DateTime" Precision="3" />
+          <Property Name="DropDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Login" Relationship="DBEOModel.FK_Login_User" FromRole="User" ToRole="Login" />
+        </EntityType>
+        <Association Name="FK_Login_User">
+          <End Type="DBEOModel.User" Role="User" Multiplicity="0..1" />
+          <End Type="DBEOModel.Login" Role="Login" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Login">
+              <PropertyRef Name="IdUser" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -776,17 +848,36 @@
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="GetInstanceProperties" FunctionName="DBEOModel.Store.GetInstanceProperties">
-            <ResultMapping>
+          <ResultMapping>
               <ComplexTypeMapping TypeName="DBEOModel.GetInstanceProperties_Result">
-                <ScalarProperty Name="ValueID" ColumnName="ValueID" />
                 <ScalarProperty Name="InstanceId" ColumnName="InstanceId" />
                 <ScalarProperty Name="BaseID" ColumnName="BaseID" />
                 <ScalarProperty Name="PropertyID" ColumnName="PropertyID" />
                 <ScalarProperty Name="Property" ColumnName="Property" />
                 <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="Login">
+            <EntityTypeMapping TypeName="DBEOModel.Login">
+              <MappingFragment StoreEntitySet="Login">
+                <ScalarProperty Name="IdUser" ColumnName="IdUser" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Login1" ColumnName="Login" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="User">
+            <EntityTypeMapping TypeName="DBEOModel.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="DropDate" ColumnName="DropDate" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

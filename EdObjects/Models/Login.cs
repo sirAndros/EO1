@@ -10,14 +10,14 @@
 namespace EdObjects.Models
 {
     using System;
+    using System.Collections.Generic;
     
-    public partial class GetInstanceProperties_Result
+    public partial class Login
     {
-        public Nullable<int> InstanceId { get; set; }
-        public Nullable<int> BaseID { get; set; }
-        public Nullable<int> PropertyID { get; set; }
-        public string Property { get; set; }
-        public string Value { get; set; }
-        public Nullable<int> ID { get; set; }
+        public string Login1 { get; set; }
+        public string Password { get; set; }
+        public Nullable<int> IdUser { get; set; }
+    
+        public virtual User User { get; set; }
     }
 }

@@ -155,8 +155,12 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AddTypeController.cs" />
     <Compile Include="Controllers\EDObjectController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\LoginsController.cs" />
+    <Compile Include="Controllers\ObjectInstancesController.cs" />
+    <Compile Include="Controllers\ObjectTypesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -176,6 +180,9 @@
       <DependentUpon>ModelFromDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\GetInstancesValues_Result.cs">
+      <DependentUpon>ModelFromDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Login.cs">
       <DependentUpon>ModelFromDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ModelFromDB.Context.cs">
@@ -206,6 +213,10 @@
       <DependentUpon>ModelFromDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\PropertyValues.cs">
+      <DependentUpon>ModelFromDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TypeAdder.cs" />
+    <Compile Include="Models\User.cs">
       <DependentUpon>ModelFromDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ValueOfProperty.cs" />
@@ -280,6 +291,23 @@
     <Content Include="Views\EDObject\Index.cshtml" />
     <Content Include="Views\EDObject\Instances.cshtml" />
     <Content Include="Views\EDObject\InstancesTree.cshtml" />
+    <Content Include="Views\EDObject\InstanceProperties.cshtml" />
+    <Content Include="Views\Logins\Create.cshtml" />
+    <Content Include="Views\Logins\Delete.cshtml" />
+    <Content Include="Views\Logins\Details.cshtml" />
+    <Content Include="Views\Logins\Edit.cshtml" />
+    <Content Include="Views\Logins\Index.cshtml" />
+    <Content Include="Views\AddType\Index.cshtml" />
+    <Content Include="Views\ObjectTypes\Create.cshtml" />
+    <Content Include="Views\ObjectTypes\Delete.cshtml" />
+    <Content Include="Views\ObjectTypes\Details.cshtml" />
+    <Content Include="Views\ObjectTypes\Edit.cshtml" />
+    <Content Include="Views\ObjectTypes\Index.cshtml" />
+    <Content Include="Views\ObjectInstances\Create.cshtml" />
+    <Content Include="Views\ObjectInstances\Delete.cshtml" />
+    <Content Include="Views\ObjectInstances\Details.cshtml" />
+    <Content Include="Views\ObjectInstances\Edit.cshtml" />
+    <Content Include="Views\ObjectInstances\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

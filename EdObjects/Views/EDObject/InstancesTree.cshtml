@@ -9,8 +9,12 @@
     settings.Header.Visible = false;
     settings.Header.Expanded = true;
     settings.ClientHandlers.ContentSelect = "function (e) { " +
-                   "$('#instanceProperties').text('Loading...');" +
-                   "$('#instanceProperties').load('" + Url.Action("GetInstancesProperties", "EDObject") + "?type=' +e.id);" +
+                   "$('#instanceProperties').html('Loading...');" +
+                   "$('#instanceProperties').load('" + Url.Action("InstanceProperties", "EDObject") + "?id=' +e.id, " +
+                   "function(response, status, xhr) {" +
+                   "if(status == 'error') { $('#instanceProperties').html(''); }" +
+                   "}" +
+                   ");" +
                "}";
     settings.Height = 300;
     settings.Width = 270;
@@ -18,17 +22,26 @@
 }).GetContent(ViewBag.ObjectsTree)
 }
 
-<p>
-    <span id="treeClickContainer"></span>
-</p>
+
+
+
 
 @section scripts
 {
     <script type="text/javascript">
-        $(document).ready(function () {
-            $("#instancesTreeViewContainer_autoCompleteInput").addClass("form-control text-box single-line");
-            $("#instancesTreeViewContainer_autoCompleteInput").attr("placeholder", "Поиск");
-            $("#instancesTreeViewContainer").css("width", "100%")
-        });
+        $("#instancesTreeViewContainer_autoCompleteInput").addClass("form-control text-box single-line");
+        $("#instancesTreeViewContainer_autoCompleteInput").attr("placeholder", "Поиск");
+        $("#instancesTreeViewContainer").css("width", "100%")
     </script>
 }
+
+<p>
+<p>
+    <button type="button" class="btn">Добавить объект</button>
+</p>
+<p>
+    <button type="button" class="btn">Редактировать объект</button>
+</p>
+<p>
+    <button type="button" class="btn">Удалить объект</button>
+</p> 

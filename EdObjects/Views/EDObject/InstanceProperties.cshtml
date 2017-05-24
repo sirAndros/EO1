@@ -1,0 +1,86 @@
+﻿@model IEnumerable<EdObjects.Models.GetInstanceProperties_Result>
+
+<script type="text/javascript">
+    var data = new Array();
+</script>
+
+@*@using (Html.BeginForm("InstanceProperties", "EDObject", FormMethod.Post, new { data =  }))*@
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    @foreach (var item in Model)
+    {
+        @*<h4>@item.</h4>
+        <hr />*@
+        <script type="text/javascript">
+            var tmp = @Json.Encode(item);
+            data.push(tmp);
+        </script>
+
+
+        <div class="form-group">
+            @Html.HiddenFor(model => item.ID)
+            <span class = "control-label col-md-2">@item.Property</span>
+            <div class="col-md-10">
+                @Html.EditorFor(model => item.Value, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => item.InstanceId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    }
+
+
+        @*<div class="form-group">
+            @Html.LabelFor(model => model.InstanceId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.InstanceId, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.InstanceId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.BaseID, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.BaseID, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.BaseID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PropertyID, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.PropertyID, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.PropertyID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Property, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Property, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Property, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Value, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Value, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Value, "", new { @class = "text-danger" })
+            </div>
+        </div>*@
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input id="save_btn" type="button" value="Save" class="btn btn-default" />
+                <script type="text/javascript">
+                    $("#save_btn").click(function (e) {
+                        console.log(data);
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+}

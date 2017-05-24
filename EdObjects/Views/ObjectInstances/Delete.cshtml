@@ -1,0 +1,48 @@
+﻿@model EdObjects.Models.ObjectInstance
+
+@{
+    ViewBag.Title = "Удаление";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Удаление</h2>
+
+<h3>Вы уверены что хотите удалит объект?</h3>
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+           Имя
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DisplayName)
+        </dd>
+
+        <dt>
+            Тип
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ObjectType.Name)
+        </dd>
+
+        @*<dt>
+            @Html.DisplayNameFor(model => model.ObjectInstance2.DisplayName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ObjectInstance2.DisplayName)
+        </dd>*@
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Удалить" class="btn btn-default" /> |
+            @Html.ActionLink("Вернуться", "Index")
+        </div>
+    }
+</div>

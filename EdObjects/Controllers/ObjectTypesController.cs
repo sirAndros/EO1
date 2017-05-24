@@ -7,93 +7,21 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using EdObjects.Models;
-using SharkDev.Web.Controls.TreeView.Model;
-using Newtonsoft.Json;
 
 namespace EdObjects.Controllers
 {
-    public class EDObjectController : Controller
+    public class ObjectTypesController : Controller
     {
         private DBEOEntities db = new DBEOEntities();
 
-        // GET: EDObject
+        // GET: ObjectTypes
         public ActionResult Index()
         {
-            List<Node> lstTreeNodes =
-                db.ObjectType
-                    .Select(t => new Node { Id = t.Id.ToString(), Term = t.Name, ParentId = t.BaseType != null ? t.BaseType.ToString() : "" })
-                    .ToList();
-            ViewBag.TypesTree = lstTreeNodes;
-
-            //List<Node> listTreeObjects =
-            //    db.ObjectInstance
-            //        .Select(t => new Node
-            //        {
-            //            Id = t.Id.ToString(),
-            //            Term = t.DisplayName,
-            //            ParentId = t.BaseId.ToString()
-            //        }).ToList();
-            //ViewBag.ObjectsTree = listTreeObjects;
-
-            return View();
+            var objectType = db.ObjectType.Include(o => o.ObjectType2);
+            return View(objectType.ToList());
         }
 
-        public ActionResult GetInstancesTree(int type)
-        {
-            List<Node> lstTreeNodes =
-                db.GetInstancesTree(type)
-                    .Select(t => new Node
-                    {
-                        Id = t.Id.ToString(),
-                        Term = t.DisplayName,
-                        ParentId = t.Parent.ToString()
-                    }).ToList();
-            ViewBag.ObjectsTree = lstTreeNodes;
-            return PartialView("InstancesTree");
-        }
-
-
-
-        public ActionResult Instances(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            var instances = db.GetInstancesValues(id).ToList();
-            if (instances == null || !instances.Any())
-            {
-                return HttpNotFound();
-            }
-            return View(instances);
-        }
-
-        public ActionResult InstanceProperties(int? id)
-        {
-            if(id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            var props = db.GetInstanceProperties(id).ToList();
-            if (props == null || !props.Any())
-            {
-                return HttpNotFound();
-            }
-            return PartialView(props);
-        }
-
-        [HttpPost]
-        public ActionResult InstanceProperties(IEnumerable<GetInstanceProperties_Result> data)
-        {
-            if (ModelState.IsValid)
-            {
-                // todo вызвать хранимую процедуру ()
-                return RedirectToAction("Index");
-            }
-            return RedirectToAction("Index");
-        }
-
-        // GET: EDObject/Details/5
+        // GET: ObjectTypes/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -108,18 +36,19 @@ namespace EdObjects.Controllers
             return View(objectType);
         }
 
-        // GET: EDObject/Create
+        // GET: ObjectTypes/Create
         public ActionResult Create()
         {
+            ViewBag.BaseType = new SelectList(db.ObjectType, "Id", "Name");
             return View();
         }
 
-        // POST: EDObject/Create
+        // POST: ObjectTypes/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name")] ObjectType objectType)
+        public ActionResult Create([Bind(Include = "Id,Name,BaseType")] ObjectType objectType)
         {
             if (ModelState.IsValid)
             {
@@ -128,10 +57,11 @@ namespace EdObjects.Controllers
                 return RedirectToAction("Index");
             }
 
+            ViewBag.BaseType = new SelectList(db.ObjectType, "Id", "Name", objectType.BaseType);
             return View(objectType);
         }
 
-        // GET: EDObject/Edit/5
+        // GET: ObjectTypes/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -143,15 +73,16 @@ namespace EdObjects.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.BaseType = new SelectList(db.ObjectType, "Id", "Name", objectType.BaseType);
             return View(objectType);
         }
 
-        // POST: EDObject/Edit/5
+        // POST: ObjectTypes/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name")] ObjectType objectType)
+        public ActionResult Edit([Bind(Include = "Id,Name,BaseType")] ObjectType objectType)
         {
             if (ModelState.IsValid)
             {
@@ -159,10 +90,11 @@ namespace EdObjects.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+            ViewBag.BaseType = new SelectList(db.ObjectType, "Id", "Name", objectType.BaseType);
             return View(objectType);
         }
 
-        // GET: EDObject/Delete/5
+        // GET: ObjectTypes/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -177,7 +109,7 @@ namespace EdObjects.Controllers
             return View(objectType);
         }
 
-        // POST: EDObject/Delete/5
+        // POST: ObjectTypes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
